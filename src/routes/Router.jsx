@@ -9,21 +9,10 @@ import Explanation from "../pages/Explanation";
 import TestPage from "../pages/TestPage";
 import LogIn from "../pages/LogIn";
 import FinishStageOne from "../tests/simplePreferences/FinishStageOne";
-import { useUser } from "../providers/UserProvider";
 import DashboardPage from "../dashboard/pages/DashboardPage";
 import StageOneClosed from "../tests/StageOneClosed";
 
 export default function Router() {
-  const { user } = useUser();
-
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="*" element={<LogIn />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
       <Route path={ROUTES.ROOT} element={<LogIn />} />
