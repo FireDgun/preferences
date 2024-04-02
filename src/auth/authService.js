@@ -30,7 +30,7 @@ const decideAboutUserGroups = async () => {
   try {
     const coll = collection(db, "users");
     const snapshot = await getCountFromServer(coll);
-    const size = snapshot.data().count;
+    const size = snapshot.data().count - 1;
     const group = (size % 14) + 1;
     return group;
   } catch (error) {
