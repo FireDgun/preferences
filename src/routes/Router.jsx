@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ErrorPage from "../pages/ErrorPage";
 import ROUTES from "./routesModel";
 import Welcome from "../pages/Welcome";
@@ -15,15 +15,15 @@ import StageOneClosed from "../tests/StageOneClosed";
 
 export default function Router() {
   const { user } = useUser();
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!user) {
       //if the route is not the root route, navigate to the root route
       if (window.location.pathname !== ROUTES.ROOT) {
-        window.location.href = ROUTES.ROOT;
+        navigate(ROUTES.ROOT);
       }
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <Routes>
