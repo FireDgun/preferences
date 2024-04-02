@@ -81,7 +81,6 @@ export default function IterativeCategorizationManager({ couples }) {
     const handleChooseCouples = () => {
       if (categotizationLevel >= 10) {
         if (productsRank.length === 0) {
-          console.log(productsFinalRank);
           handleDone();
           return;
         }
@@ -93,7 +92,6 @@ export default function IterativeCategorizationManager({ couples }) {
           setProductsRank((prevArray) => prevArray.slice(0, -1));
           setProductsFinalRank((prev) => [...prev, bestProducts[0]]);
           setCategotizationLevel((prev) => prev + 1);
-          console.log(productsRank);
         }
       }
     };
@@ -235,7 +233,6 @@ export default function IterativeCategorizationManager({ couples }) {
         return;
     }
   };
-  console.log(productsRank);
   return (
     <div>
       {product1 === null && product2 === null ? (

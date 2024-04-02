@@ -32,7 +32,6 @@ const decideAboutUserGroups = async () => {
     const snapshot = await getCountFromServer(coll);
     const size = snapshot.data().count;
     const group = (size % 14) + 1;
-    console.log(`Decided group: ${group} for new user`);
     return group;
   } catch (error) {
     console.error("Error in decideAboutUserGroups:", error);
@@ -54,7 +53,6 @@ const getAllUsers = async () => {
     const coll = collection(db, "users");
     const snapshot = await getDocs(coll);
     const users = snapshot.docs.map((doc) => doc.data());
-    console.log("Users fetched:", users);
     return users;
   } catch (error) {
     console.error("Error in getAllUsers:", error);

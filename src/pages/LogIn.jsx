@@ -15,7 +15,6 @@ export default function LogIn() {
   const handleLogin = async () => {
     const userFromDb = await postOrGetUserId(id);
     setUser(userFromDb);
-    console.log(adminUser.id, userFromDb.id);
     if (userFromDb.id === adminUser.id) {
       navigate(ROUTES.ADMIN);
     } else if (userFromDb?.stage === 1 && !isStageOneOpen) {

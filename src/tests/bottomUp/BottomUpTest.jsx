@@ -69,8 +69,6 @@ export default function BottomUpTest({ couples }) {
     }
   }, [productsRank, timeTaken, user, setUser, navigate]);
 
-  console.log(indexToCompare);
-  console.log(productsRank);
   if (OPTIONS["OPTION" + newProduct] === undefined) {
     return <div>טוען...</div>;
   }

@@ -71,8 +71,6 @@ export default function TopDownTest({ couples }) {
     }
   }, [productsRank, handleDone]);
 
-  console.log(indexToCompare);
-  console.log(productsRank);
   if (OPTIONS["OPTION" + newProduct] === undefined) {
     return <div>טוען...</div>;
   }

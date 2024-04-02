@@ -24,7 +24,6 @@ export default function TestStageTwo() {
       setTestNumber((user.group - 1) % 7);
     }
   }, [user]);
-  console.log(user);
   if (user === null) return null;
   testNumber === null && <div>Loading...</div>;
   return (
