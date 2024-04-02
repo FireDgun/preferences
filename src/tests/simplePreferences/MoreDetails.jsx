@@ -55,6 +55,7 @@ function MoreDetails({ age, setAge, gender, setGender, setCoupleIndex }) {
           </Grid>
         </Grid>
         <Button
+          variant="contained"
           sx={{ mt: 2, width: "100%" }} // Button takes full width
           onClick={() => setCoupleIndex((prev) => prev + 1)}
           disabled={

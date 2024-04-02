@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import ErrorPage from "../pages/ErrorPage";
 import ROUTES from "./routesModel";
 import Welcome from "../pages/Welcome";
-import Details from "../pages/Details";
 import ThankYou from "../pages/ThankYou";
 import Explanation from "../pages/Explanation";
 import TestPage from "../pages/TestPage";
@@ -28,7 +27,6 @@ export default function Router() {
     <Routes>
       <Route path={ROUTES.ROOT} element={<LogIn />} />
       <Route path={ROUTES.WELCOME} element={<Welcome />} />
-      <Route path={ROUTES.DETAILS} element={<Details />} />
       <Route path={ROUTES.THANK_YOU} element={<ThankYou />} />
       <Route path={ROUTES.EXPLANATION} element={<Explanation />} />
       <Route path={ROUTES.TEST} element={<TestPage />} />
