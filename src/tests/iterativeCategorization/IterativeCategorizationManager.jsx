@@ -28,6 +28,7 @@ export default function IterativeCategorizationManager({ couples }) {
   const [product1, setProduct1] = useState(null);
   const [product2, setProduct2] = useState(null);
   const [timeTaken, setTimeTaken] = useState(null);
+  const [isExampleDone, setIsExampleDone] = useState(false);
   const { user, setUser } = useUser();
   const navigate = useNavigate();
 
@@ -233,6 +234,24 @@ export default function IterativeCategorizationManager({ couples }) {
         return;
     }
   };
+
+  if (!isExampleDone) {
+    return (
+      <div>
+        <IterativeCategorizationTest
+          title={"שלב מקדים"}
+          productsToCategorize={[10, 11, 12, 13]}
+          categoryName1={"מוצרים לא טובים"}
+          categoryName2={"מוצרים טובים"}
+          handleFinishCategorization={() => {
+            setIsExampleDone(true);
+            setTimeTaken(Date.now());
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
       {product1 === null && product2 === null ? (

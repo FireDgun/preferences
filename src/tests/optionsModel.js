@@ -5,10 +5,14 @@ const OPTIONS_NAME = {
   OPTION3: "cup",
   OPTION4: "saltAndPepper",
   OPTION5: "headphones",
-  OPTION6: "vacum", // Corrected to names
-  OPTION7: "globe", // Corrected to names
-  OPTION8: "fan", // Corrected to names
-  OPTION9: "moon", // Corrected to names
+  OPTION6: "vacum",
+  OPTION7: "globe",
+  OPTION8: "fan",
+  OPTION9: "moon",
+  OPTION10: "belt",
+  OPTION11: "wallet",
+  OPTION12: "officeLamp",
+  OPTION13: "plantPot",
 };
 const OPTIONS = {
   OPTION0: `/assets/${OPTIONS_NAME.OPTION0}.png`,
@@ -21,6 +25,10 @@ const OPTIONS = {
   OPTION7: `/assets/${OPTIONS_NAME.OPTION7}.png`,
   OPTION8: `/assets/${OPTIONS_NAME.OPTION8}.png`,
   OPTION9: `/assets/${OPTIONS_NAME.OPTION9}.png`,
+  OPTION10: `/assets/${OPTIONS_NAME.OPTION10}.png`,
+  OPTION11: `/assets/${OPTIONS_NAME.OPTION11}.png`,
+  OPTION12: `/assets/${OPTIONS_NAME.OPTION12}.png`,
+  OPTION13: `/assets/${OPTIONS_NAME.OPTION13}.png`,
 };
 
 export { OPTIONS, OPTIONS_NAME };

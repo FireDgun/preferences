@@ -58,6 +58,11 @@ export default function RemoveTheBestTest({ couples }) {
 
   return (
     <div>
+      {productsRank.length > 0 && (
+        <Typography variant="h4" align="center">
+          מבין המוצרים שנשארו
+        </Typography>
+      )}
       <Typography variant="h4" align="center">
         בחר את המוצר המועדף עליך
       </Typography>

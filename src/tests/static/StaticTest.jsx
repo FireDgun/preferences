@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Typography, Box, Grid, Button } from "@mui/material";
 import ShowProducts from "../components/ShowProducts";
 import RankedProductsTable from "./RankedProductsTable";
-import { OPTIONS_NAME } from "../optionsModel";
-import { useUser } from "../../providers/UserProvider";
-import { useNavigate } from "react-router-dom";
-import { setUserOnDb } from "../../auth/authService";
-import ROUTES from "../../routes/routesModel";
 
-const StaticTest = ({ couples }) => {
+const StaticTest = ({ couples, handleDone, title = "" }) => {
   const [products, setProducts] = useState(couples.flat());
   const [rankedProducts, setRankedProducts] = useState([]);
-  const [timeTaken, setTimeTaken] = useState(null); // [1
-  const { user, setUser } = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!timeTaken) {
-      setTimeTaken(Date.now());
-    }
-  }, [timeTaken]);
-
   const handleChooseProduct = (product) => {
     setRankedProducts((prev) => [...prev, product]);
     setProducts((prev) => prev.filter((p) => p !== product));
@@ -52,36 +37,14 @@ const StaticTest = ({ couples }) => {
       ];
     });
   };
-  const handleProductNames = (products) => {
-    let productsNames = [];
-    products.forEach((product) => {
-      productsNames.push(OPTIONS_NAME["OPTION" + product]);
-    });
-    return productsNames;
-  };
-  const handleDone = async () => {
-    let productsNames = handleProductNames(rankedProducts);
-
-    await setUserOnDb({
-      ...user,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 6,
-      timeTaken: (Date.now() - timeTaken) / 1000,
-    });
-    setUser((prev) => ({
-      ...prev,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 6,
-    }));
-    navigate(ROUTES.THANK_YOU);
-  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography variant="h4" align="center">
         דרג את המוצרים
+      </Typography>
+      <Typography variant="h6" align="center">
+        {title}
       </Typography>
       <Grid container spacing={2}>
         {products.length > 0 ? (
@@ -107,7 +70,11 @@ const StaticTest = ({ couples }) => {
               alignItems: "center",
             }}
           >
-            <Button variant="contained" size="large" onClick={handleDone}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => handleDone(rankedProducts)}
+            >
               שמור
             </Button>
           </Grid>

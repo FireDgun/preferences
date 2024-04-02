@@ -56,6 +56,11 @@ export default function RemoveTheWorstTest({ couples }) {
 
   return (
     <div>
+      {productsRank.length > 0 && (
+        <Typography variant="h4" align="center">
+          מבין המוצרים שנשארו
+        </Typography>
+      )}
       <Typography variant="h4" align="center">
         בחר את המוצר שהכי פחות טוב לדעתך
       </Typography>

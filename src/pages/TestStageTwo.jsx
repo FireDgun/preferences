@@ -5,9 +5,9 @@ import RemoveTheBestTest from "../tests/removeTheBest/RemoveTheBestTest";
 import RemoveTheWorstTest from "../tests/removeTheWorst/RemoveTheWorstTest";
 import BottomUpTest from "../tests/bottomUp/BottomUpTest";
 import TopDownTest from "../tests/topDown/TopDownTest";
-import StaticTest from "../tests/static/StaticTest";
 import PairwiseStaticTest from "../tests/pairwiseStatic/PairwiseStaticTest";
 import IterativeCategorizationManager from "../tests/iterativeCategorization/IterativeCategorizationManager";
+import StaticTestManager from "../tests/static/StaticTestManager";
 
 export default function TestStageTwo() {
   const [couples, setCouples] = useState([]);
@@ -33,7 +33,7 @@ export default function TestStageTwo() {
       {testNumber === 2 && <BottomUpTest couples={couples} />}
       {testNumber === 3 && <TopDownTest couples={couples} />}
       {testNumber === 4 && <IterativeCategorizationManager couples={couples} />}
-      {testNumber === 5 && <StaticTest couples={couples} />}
+      {testNumber === 5 && <StaticTestManager couples={couples} />}
       {testNumber === 6 && <PairwiseStaticTest couples={couples} />}
     </>
   );

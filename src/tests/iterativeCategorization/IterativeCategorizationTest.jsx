@@ -3,6 +3,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { OPTIONS } from "../optionsModel";
 
 export default function IterativeCategorizationTest({
+  title = "",
   productsToCategorize,
   categoryName1,
   categoryName2,
@@ -64,6 +65,9 @@ export default function IterativeCategorizationTest({
     <div>
       <Typography variant="h4" align="center" gutterBottom>
         חלק את המוצרים לקטגוריות
+      </Typography>
+      <Typography variant="h5" align="center" gutterBottom>
+        {title}
       </Typography>
 
       <Grid container spacing={2} justifyContent="center" marginBottom={4}>
