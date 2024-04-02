@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import { setUserOnDb } from "../../auth/authService";
 import { useUser } from "../../providers/UserProvider";
+import { OPTIONS_NAME } from "../optionsModel";
 
 export default function RemoveTheWorstTest({ couples }) {
   const [productsRank, setProductsRank] = useState([]);
@@ -13,6 +14,18 @@ export default function RemoveTheWorstTest({ couples }) {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const handleChooseProduct = (productNumber, productName) => {
+    if (products.length === 2) {
+      let theOtherProduct = products.find(
+        (product) => product !== productNumber
+      );
+      setProductsRank([
+        ...productsRank,
+        productName,
+        OPTIONS_NAME[`OPTION${theOtherProduct}`],
+      ]);
+      setProducts([]);
+      return;
+    }
     setProductsRank([...productsRank, productName]);
     setProducts((prev) => prev.filter((product) => product !== productNumber));
   };
