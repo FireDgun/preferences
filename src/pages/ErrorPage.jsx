@@ -1,9 +1,8 @@
 import React from "react";
-import { Typography, Box, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Typography, Box } from "@mui/material";
+import BackButton from "../components/BackButton";
 
 export default function ErrorPage() {
-  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -22,9 +21,7 @@ export default function ErrorPage() {
       <Typography variant="body1" sx={{ mb: 2 }}>
         חזור לעמוד הראשי
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => navigate("/")}>
-        חזור
-      </Button>
+      <BackButton />
     </Box>
   );
 }

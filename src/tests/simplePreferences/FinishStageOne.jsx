@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
+import BackButton from "../../components/BackButton";
 
 export default function FinishStageOne() {
   return (
@@ -20,6 +21,7 @@ export default function FinishStageOne() {
       <Typography variant="body1" sx={{ mb: 2 }}>
         שלב 2 יפורסם בקרוב
       </Typography>
+      <BackButton />
     </Box>
   );
 }

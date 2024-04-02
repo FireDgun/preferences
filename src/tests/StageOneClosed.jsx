@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
+import BackButton from "../components/BackButton";
 
 export default function StageOneClosed() {
   return (
@@ -23,6 +24,7 @@ export default function StageOneClosed() {
       <Typography variant="body1" sx={{ mb: 2 }}>
         במידה וכבר עשית את שלב א' - יש לשים לב שהקלדת את ת.ז ללא שגיאות
       </Typography>
+      <BackButton />
     </Box>
   );
 }
