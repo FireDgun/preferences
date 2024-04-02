@@ -15,15 +15,14 @@ import StageOneClosed from "../tests/StageOneClosed";
 
 export default function Router() {
   const { user } = useUser();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!user) {
-      //if the route is not the root route, navigate to the root route
-      if (window.location.pathname !== ROUTES.ROOT) {
-        navigate(ROUTES.ROOT);
-      }
-    }
-  }, [user, navigate]);
+
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="*" element={<LogIn />} />
+      </Routes>
+    );
+  }
 
   return (
     <Routes>
