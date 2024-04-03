@@ -47,6 +47,7 @@ export default function LogIn() {
       <TextField
         value={id}
         onChange={(e) => setId(e.target.value)}
+        type="number"
         placeholder="ת.ז"
         dir="rtl"
       />
