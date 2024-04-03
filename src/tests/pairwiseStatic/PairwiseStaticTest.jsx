@@ -7,7 +7,6 @@ import ROUTES from "../../routes/routesModel";
 import { Box, Button, Typography } from "@mui/material";
 
 export default function PairwiseStaticTest({ couples }) {
-  const products = couples.flat();
   const [allPossibleCouples, setAllPossibleCouples] = useState(null);
   const [choise, setChoise] = useState([]);
   const [coupleIndex, setCoupleIndex] = useState(0);
@@ -17,6 +16,7 @@ export default function PairwiseStaticTest({ couples }) {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   useEffect(() => {
+    const products = couples.flat();
     let allCouples = [];
     for (let i = 0; i < products.length; i++) {
       for (let j = i + 1; j < products.length; j++) {
@@ -26,7 +26,7 @@ export default function PairwiseStaticTest({ couples }) {
     // Shuffle the couples array
     allCouples = shuffleArray(allCouples);
     setAllPossibleCouples(allCouples);
-  }, [products]);
+  }, [couples]);
 
   // Function to shuffle an array
   const shuffleArray = (array) => {
