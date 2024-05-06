@@ -83,7 +83,7 @@ export default function IterativeCategorizationTest({
   return (
     <div>
       <Typography variant="h4" align="center" gutterBottom>
-        חלק את המוצרים לקבוצות של{" "}
+        חלק את המוצרים לשתי קבוצות של{" "}
         {productsToCategorize.length % 2 === 0
           ? maxProductsAllowed
           : `${maxProductsAllowed}-${maxProductsAllowed - 1}`}{" "}

@@ -5,9 +5,6 @@ import { Typography } from "@mui/material";
 export default function AttentionQuestionTest({ handleFinish }) {
   return (
     <div>
-      <Typography variant="h4" align="center">
-        שאלת הכנה
-      </Typography>
       <Typography variant="h6" align="center">
         בחר את המוצר השמאלי ביותר
       </Typography>
