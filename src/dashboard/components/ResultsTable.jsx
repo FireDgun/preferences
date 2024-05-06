@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as XLSX from "xlsx";
 
-const colsWithLeftBorder = ["9", "25", "36", "81"];
+const colsWithLeftBorder = ["10", "26", "37", "82"];
 // Helper function to determine the stage description
 const getStageDescription = (stage) => {
   switch (stage) {
@@ -114,6 +114,7 @@ export default function ResultsTable({ data }) {
           Age: user.age,
           Gender: user.gender,
           Group: user.group,
+          choiseCount: user.choiseCount ? user.choiseCount : "",
           Stage: getStageDescription(user.stage), // Assuming this already returns a Hebrew description
           "Test Name": getTestDescription(user.group), // Assuming this already returns a Hebrew description
           Points: calculatePoints(user),
