@@ -8,18 +8,50 @@ import TopDownTest from "../tests/topDown/TopDownTest";
 import PairwiseStaticTest from "../tests/pairwiseStatic/PairwiseStaticTest";
 import IterativeCategorizationManager from "../tests/iterativeCategorization/IterativeCategorizationManager";
 import StaticTestManager from "../tests/static/StaticTestManager";
+import AttentionQuestionTest from "../tests/attentionQuestion/AttentionQuestionTest";
+// Function to shuffle an array
+const shuffleArray = (array) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
+
+function shuffleAndGroup(arr) {
+  // Flatten the array
+  const flatArray = arr.flat();
+
+  // Shuffle the flat array using the Fisher-Yates algorithm
+  for (let i = flatArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = flatArray[i];
+    flatArray[i] = flatArray[j];
+    flatArray[j] = temp;
+  }
+
+  // Regroup the flat array into arrays of two elements
+  const result = [];
+  for (let i = 0; i < flatArray.length; i += 2) {
+    result.push([flatArray[i], flatArray[i + 1]]);
+  }
+
+  return result;
+}
 
 export default function TestStageTwo() {
   const [couples, setCouples] = useState([]);
   const [testNumber, setTestNumber] = useState(null);
+  const [isDidPractice, setIsDidPractice] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
     if (user) {
       if (user.group % 2 === 0) {
-        setCouples(group1Couples);
+        setCouples(shuffleAndGroup(group1Couples));
       } else {
-        setCouples(group2Couples);
+        setCouples(shuffleAndGroup(group2Couples));
       }
       setTestNumber((user.group - 1) % 7);
     }
@@ -28,13 +60,23 @@ export default function TestStageTwo() {
   testNumber === null && <div>Loading...</div>;
   return (
     <>
-      {testNumber === 0 && <RemoveTheBestTest couples={couples} />}
-      {testNumber === 1 && <RemoveTheWorstTest couples={couples} />}
-      {testNumber === 2 && <BottomUpTest couples={couples} />}
-      {testNumber === 3 && <TopDownTest couples={couples} />}
-      {testNumber === 4 && <IterativeCategorizationManager couples={couples} />}
-      {testNumber === 5 && <StaticTestManager couples={couples} />}
-      {testNumber === 6 && <PairwiseStaticTest couples={couples} />}
+      {!isDidPractice ? (
+        <>
+          <AttentionQuestionTest handleFinish={() => setIsDidPractice(true)} />
+        </>
+      ) : (
+        <>
+          {testNumber === 0 && <RemoveTheBestTest couples={couples} />}
+          {testNumber === 1 && <RemoveTheWorstTest couples={couples} />}
+          {testNumber === 2 && <BottomUpTest couples={couples} />}
+          {testNumber === 3 && <TopDownTest couples={couples} />}
+          {testNumber === 4 && (
+            <IterativeCategorizationManager couples={couples} />
+          )}
+          {testNumber === 5 && <StaticTestManager couples={couples} />}
+          {testNumber === 6 && <PairwiseStaticTest couples={couples} />}
+        </>
+      )}
     </>
   );
 }

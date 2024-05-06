@@ -15,7 +15,7 @@ export default function ThankYou() {
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
-        תודה רבה על השתתפותך בשאלון!
+        תודה רבה על השתתפותך בשאלון
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
         אנו מעריכים את הזמן והמחשבה שהקדשת.

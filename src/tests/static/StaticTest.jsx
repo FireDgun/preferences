@@ -1,93 +1,89 @@
+// StaticTest.js
 import React, { useState } from "react";
-import { Typography, Box, Grid, Button } from "@mui/material";
-import ShowProducts from "../components/ShowProducts";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import RankedProductsTable from "./RankedProductsTable";
+import ShowProductsDraggable from "./ShowProductsDraggable";
 
 const StaticTest = ({ couples, handleDone, title = "" }) => {
   const [products, setProducts] = useState(couples.flat());
-  const [rankedProducts, setRankedProducts] = useState([]);
-  const handleChooseProduct = (product) => {
-    setRankedProducts((prev) => [...prev, product]);
+  const [rankedProducts, setRankedProducts] = useState(
+    Array(couples.flat().length).fill(null)
+  );
+
+  const handleDragStart = (e, product) => {
+    e.dataTransfer.setData("product", JSON.stringify(product));
+  };
+
+  const handleDropRanked = (e, rank) => {
+    e.preventDefault();
+    let product = e.dataTransfer.getData("product");
+
+    if (product === "") return;
+    product = JSON.parse(product);
+    const newRankedProducts = [...rankedProducts];
+    if (newRankedProducts[rank]) return; // Avoid duplicates in ranks
+
+    newRankedProducts[rank] = product; // Set product in the specified rank
+    setRankedProducts(newRankedProducts);
     setProducts((prev) => prev.filter((p) => p !== product));
   };
+  console.log(rankedProducts);
 
-  const handleUnrankProduct = (product) => {
-    setProducts((prev) => [...prev, product]);
-    setRankedProducts((prev) => prev.filter((p) => p !== product));
+  const handleRemoveRanked = (e, rank) => {
+    e.preventDefault();
+    const product = rankedProducts[rank];
+    if (!Number.isInteger(product)) return;
+
+    const newProducts = [...products, product];
+    const newRankedProducts = [...rankedProducts];
+    newRankedProducts[rank] = null;
+
+    setProducts(newProducts);
+    setRankedProducts(newRankedProducts);
   };
 
-  const handleMoveUp = (index) => {
-    if (index <= 0) return; // No move if it's the first item
-    setRankedProducts((prev) => [
-      ...prev.slice(0, index - 1),
-      prev[index],
-      prev[index - 1],
-      ...prev.slice(index + 1),
-    ]);
-  };
-
-  const handleMoveDown = (index) => {
-    setRankedProducts((prev) => {
-      if (index >= prev.length - 1) return prev; // No move if it's the last item
-      return [
-        ...prev.slice(0, index),
-        prev[index + 1],
-        prev[index],
-        ...prev.slice(index + 2),
-      ];
-    });
+  const allowDrop = (e) => {
+    e.preventDefault();
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography variant="h4" align="center">
-        דרג את המוצרים
+        דרגו את המוצרים הבאים
       </Typography>
       <Typography variant="h6" align="center">
         {title}
       </Typography>
       <Grid container spacing={2}>
-        {products.length > 0 ? (
-          <Grid item xs={12} md={8}>
-            <Typography variant="h6" align="center">
-              מוצרים
-            </Typography>
-            <ShowProducts
+        <Grid item xs={12} md={9}>
+          {products.length > 0 ? (
+            <ShowProductsDraggable
               products={products}
-              handleChooseProduct={handleChooseProduct}
-              width={100}
-              height={100}
+              handleDragStart={handleDragStart}
             />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            xs={12}
-            md={8}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => handleDone(rankedProducts)}
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 25,
+              }}
             >
-              שמור
-            </Button>
-          </Grid>
-        )}
-        <Grid item xs={12} md={4}>
-          <Typography variant="h6" align="center">
-            דירוג
-          </Typography>
+              <Button
+                variant="contained"
+                onClick={() => handleDone(rankedProducts)}
+              >
+                שמור
+              </Button>
+            </Box>
+          )}
+        </Grid>
+        <Grid item xs={12} md={3}>
           <RankedProductsTable
             rankedProducts={rankedProducts}
-            onUnrank={handleUnrankProduct}
-            moveDown={handleMoveDown}
-            moveUp={handleMoveUp}
+            handleDropRanked={handleDropRanked}
+            handleRemoveRanked={handleRemoveRanked}
+            allowDrop={allowDrop}
           />
         </Grid>
       </Grid>

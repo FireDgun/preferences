@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import IterativeCategorizationTest from "./IterativeCategorizationTest";
-import { Box, Button, Typography } from "@mui/material";
-import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
+import { OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
 import { useUser } from "../../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
@@ -22,8 +21,7 @@ export default function IterativeCategorizationManager({ couples }) {
   const [productsToCategorize, setProductsToCategorize] = useState(
     couples.flat()
   );
-  const [categoryName1, setCategoryName1] = useState("מוצרים לא טובים");
-  const [categoryName2, setCategoryName2] = useState("מוצרים טובים");
+
   const [categotizationLevel, setCategotizationLevel] = useState(0);
   const [product1, setProduct1] = useState(null);
   const [product2, setProduct2] = useState(null);
@@ -70,6 +68,7 @@ export default function IterativeCategorizationManager({ couples }) {
         stage: 3,
         testNumber: 5,
         timeTaken: (Date.now() - timeTaken) / 1000,
+        stage2Timestamp: Date.now(),
       });
       setUser((prev) => ({
         ...prev,
@@ -112,15 +111,13 @@ export default function IterativeCategorizationManager({ couples }) {
       case 0:
         setProductsRank([notGoodProducts, goodProducts]);
         setProductsToCategorize(goodProducts);
-        setCategoryName1("מוצרים טובים");
-        setCategoryName2("מוצרים מצוינים");
+
         setCategotizationLevel(1);
         break;
       case 1:
         setProductsRank((prev) => [prev[0], notGoodProducts, goodProducts]);
         setProductsToCategorize(productsRank[0]);
-        setCategoryName1("מוצרים בכלל לא טובים");
-        setCategoryName2("מוצרים  לא טובים");
+
         setCategotizationLevel(2);
         break;
 
@@ -134,18 +131,15 @@ export default function IterativeCategorizationManager({ couples }) {
         ]);
         if (copy[1].length === 3) {
           setProductsToCategorize(copy[1]);
-          setCategoryName1("מוצרים טובים");
-          setCategoryName2("מוצרים טובים יותר");
+
           setCategotizationLevel(3);
         } else if (copy[2].length === 3) {
           setProductsToCategorize(copy[2]);
-          setCategoryName1("מוצרים מצוינים");
-          setCategoryName2("מוצרים מצוינים יותר");
+
           setCategotizationLevel(4);
         } else {
           setProductsToCategorize([]);
-          setCategoryName1("מוצרים לא טובים");
-          setCategoryName2("מוצרים בכלל לא טובים");
+
           setCategotizationLevel(10);
         }
 
@@ -162,18 +156,15 @@ export default function IterativeCategorizationManager({ couples }) {
         ]);
         if (copy2[0].length === 3) {
           setProductsToCategorize(copy2[0]);
-          setCategoryName1("מוצרים גרועים");
-          setCategoryName2("מוצרים לא טובים");
+
           setCategotizationLevel(5);
         } else if (copy2[1].length === 3) {
           setProductsToCategorize(copy2[1]);
-          setCategoryName1("מוצרים לא טובים");
-          setCategoryName2("מוצרים די טובים");
+
           setCategotizationLevel(6);
         } else {
           setProductsToCategorize([]);
-          setCategoryName1("מוצרים לא טובים");
-          setCategoryName2("מוצרים בכלל לא טובים");
+
           setCategotizationLevel(10);
         }
 
@@ -189,18 +180,15 @@ export default function IterativeCategorizationManager({ couples }) {
         ]);
         if (copy3[0].length === 3) {
           setProductsToCategorize(copy3[0]);
-          setCategoryName1("מוצרים גרועים");
-          setCategoryName2("מוצרים לא טובים");
+
           setCategotizationLevel(5);
         } else if (copy3[1].length === 3) {
           setProductsToCategorize(copy3[1]);
-          setCategoryName1("מוצרים לא טובים");
-          setCategoryName2("מוצרים די טובים");
+
           setCategotizationLevel(6);
         } else {
           setProductsToCategorize([]);
-          setCategoryName1("מוצרים לא טובים");
-          setCategoryName2("מוצרים בכלל לא טובים");
+
           setCategotizationLevel(10);
         }
 
@@ -213,8 +201,7 @@ export default function IterativeCategorizationManager({ couples }) {
           ...prev.slice(1),
         ]);
         setProductsToCategorize([]);
-        setCategoryName1("מוצרים לא טובים");
-        setCategoryName2("מוצרים בכלל לא טובים");
+
         setCategotizationLevel(10);
         break;
 
@@ -226,8 +213,7 @@ export default function IterativeCategorizationManager({ couples }) {
           ...prev.slice(2),
         ]);
         setProductsToCategorize([]);
-        setCategoryName1("מוצרים לא טובים");
-        setCategoryName2("מוצרים בכלל לא טובים");
+
         setCategotizationLevel(10);
         break;
       default:
@@ -241,8 +227,8 @@ export default function IterativeCategorizationManager({ couples }) {
         <IterativeCategorizationTest
           title={"שלב מקדים"}
           productsToCategorize={[10, 11, 12, 13]}
-          categoryName1={"מוצרים לא טובים"}
-          categoryName2={"מוצרים טובים"}
+          categoryName1={"מוצרים פחות מועדפים"}
+          categoryName2={"מוצרים מועדפים"}
           handleFinishCategorization={() => {
             setIsExampleDone(true);
             setTimeTaken(Date.now());
@@ -251,50 +237,27 @@ export default function IterativeCategorizationManager({ couples }) {
       </div>
     );
   }
-
+  console.log("productsToCategorize", productsToCategorize);
+  console.log("product1", product1);
+  console.log("product2", product2);
   return (
     <div>
       {product1 === null && product2 === null ? (
         <IterativeCategorizationTest
           productsToCategorize={productsToCategorize}
-          categoryName1={categoryName1}
-          categoryName2={categoryName2}
+          categoryName1={"מוצרים פחות מועדפים"}
+          categoryName2={"מוצרים מועדפים"}
           handleFinishCategorization={handleFinishCategorization}
         />
       ) : (
-        <Box padding={10}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ textAlign: "center", padding: 10 }}
-          >
-            בחרו את המוצר המועדף עליכם
-          </Typography>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box>
-              <Button
-                onClick={() => handleChooseProduct(1)}
-                sx={{ marginX: 1 }}
-              >
-                <img
-                  src={OPTIONS["OPTION" + product1]}
-                  alt="option1"
-                  style={{ width: 250, height: 250 }}
-                />
-              </Button>
-              <Button
-                onClick={() => handleChooseProduct(2)}
-                sx={{ marginX: 1 }}
-              >
-                <img
-                  src={OPTIONS["OPTION" + product2]}
-                  alt="option2"
-                  style={{ width: 250, height: 250 }}
-                />
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+        <IterativeCategorizationTest
+          productsToCategorize={[product1, product2]}
+          categoryName1={"מוצר פחות מועדף"}
+          categoryName2={"מוצר מועדף"}
+          handleFinishCategorization={(goodProducts, notGoodProducts) => {
+            handleChooseProduct(goodProducts[0] === product1 ? 1 : 2);
+          }}
+        />
       )}
     </div>
   );

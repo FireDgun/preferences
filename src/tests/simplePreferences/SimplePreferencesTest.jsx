@@ -7,6 +7,7 @@ import { useUser } from "../../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import MoreDetails from "./MoreDetails";
+import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
 
 export default function SimplePreferencesTest() {
   const [choise, setChoise] = useState([]);
@@ -14,11 +15,12 @@ export default function SimplePreferencesTest() {
   const [startTime, setStartTime] = useState(Date.now());
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState(0);
-
+  const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
   const { user, setUser } = useUser();
   const navigate = useNavigate();
 
   const handleChooseProduct = async (productIndex) => {
+    showBlackScreenForPeriodOfTime(500);
     if (coupleIndex < group1Couples.length) {
       const endTime = Date.now();
       const timeTaken = (endTime - startTime) / 1000; // Time taken in milliseconds
@@ -48,6 +50,7 @@ export default function SimplePreferencesTest() {
       stage: 2,
       age: age,
       gender: gender,
+      stage1Timestamp: Date.now(),
     });
     setUser((prev) => ({ ...prev, preferencesStage1: choise, stage: 2 }));
     navigate(ROUTES.TEST_STAGE_ONE_FINISH);

@@ -1,74 +1,63 @@
+// RankedProductsTable.js
+import React from "react";
 import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Paper,
-  Button,
-  Avatar,
-  IconButton,
+  Box,
 } from "@mui/material";
 import { OPTIONS } from "../optionsModel";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 const RankedProductsTable = ({
   rankedProducts,
-  onUnrank,
-  moveUp,
-  moveDown,
+  handleDropRanked,
+  handleRemoveRanked,
+  allowDrop,
 }) => (
-  <TableContainer component={Paper} align="right" sx={{ width: "80%" }}>
-    <Table aria-label="ranked products" align="right">
-      <TableHead align="right">
+  <Paper
+    sx={{
+      width: "300px",
+      direction: "rtl",
+      maxHeight: "80vh", // Set a max height for the paper
+      overflowY: "auto", // Enable vertical scrolling
+    }}
+  >
+    <Table>
+      <TableHead>
         <TableRow>
-          <TableCell align="right"></TableCell>
-          <TableCell align="right">מוצר</TableCell>
-          <TableCell align="right" sx={{ textAlign: "right" }}>
-            דירוג
-          </TableCell>
+          <TableCell sx={{ textAlign: "right" }}>דירוג</TableCell>
+          <TableCell sx={{ textAlign: "right" }}>מוצר</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody align="right">
+      <TableBody>
         {rankedProducts.map((product, index) => (
           <TableRow
-            key={OPTIONS[`OPTION${product}`]}
-            sx={{
-              textAlign: "right",
-            }}
-            align="right"
+            key={index}
+            onDragOver={allowDrop}
+            onDrop={(e) => handleDropRanked(e, index)}
           >
-            <TableCell align="left">
-              <Button onClick={() => onUnrank(product)}>הסר</Button>
-              {index !== 0 && (
-                <IconButton onClick={() => moveUp(index)}>
-                  <ArrowDropUpIcon />
-                </IconButton>
-              )}
-              {index !== rankedProducts.length - 1 && (
-                <IconButton onClick={() => moveDown(index)}>
-                  <ArrowDropDownIcon />
-                </IconButton>
+            <TableCell sx={{ textAlign: "right" }}>{index + 1}</TableCell>
+            <TableCell sx={{ textAlign: "right" }}>
+              {Number.isInteger(product) ? (
+                <img
+                  src={OPTIONS[`OPTION${product}`]}
+                  alt={`Ranked ${index + 1}`}
+                  draggable
+                  onDragStart={(e) => handleRemoveRanked(e, index)}
+                  style={{ width: 50, height: 50 }}
+                />
+              ) : (
+                <Box sx={{ width: 50, height: 50, border: "2px dashed" }} />
               )}
             </TableCell>
-            <TableCell
-              align="right"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Avatar
-                src={OPTIONS[`OPTION${product}`]}
-                alt={`option${index + 1}`}
-                style={{ width: 40, height: 40 }}
-              />
-            </TableCell>
-
-            <TableCell align="right">{index + 1}</TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-  </TableContainer>
+  </Paper>
 );
 
 export default RankedProductsTable;

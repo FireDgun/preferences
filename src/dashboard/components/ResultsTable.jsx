@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as XLSX from "xlsx";
 
-const colsWithLeftBorder = ["7", "22", "33", "78"];
+const colsWithLeftBorder = ["9", "25", "36", "81"];
 // Helper function to determine the stage description
 const getStageDescription = (stage) => {
   switch (stage) {
@@ -48,6 +48,14 @@ const getTestDescription = (group) => {
     default:
       return "";
   }
+};
+
+const timestampToDateTimeString = (timestamp) => {
+  if (!timestamp) {
+    return "-";
+  }
+  const date = new Date(timestamp);
+  return date.toLocaleString("he-IL");
 };
 
 const calculatePoints = (user) => {
@@ -102,52 +110,57 @@ export default function ResultsTable({ data }) {
       const flatData = data.map((user) => {
         // Initialize the base object with user-specific information translated to Hebrew
         let userObj = {
-          מזהה: user.id,
-          גיל: user.age,
-          מין: user.gender,
-          קבוצה: user.group,
-          שלב: getStageDescription(user.stage), // Assuming this already returns a Hebrew description
-          ניסוי: getTestDescription(user.group), // Assuming this already returns a Hebrew description
-          ניקוד: calculatePoints(user),
+          Id: user.id,
+          Age: user.age,
+          Gender: user.gender,
+          Group: user.group,
+          Stage: getStageDescription(user.stage), // Assuming this already returns a Hebrew description
+          "Test Name": getTestDescription(user.group), // Assuming this already returns a Hebrew description
+          Points: calculatePoints(user),
+          "Time stamp stage 1": timestampToDateTimeString(user.stage1Timestamp),
+          "Time stamp stage 2": timestampToDateTimeString(user.stage2Timestamp),
         };
 
         // Handle preferencesStage1 items in Hebrew
         Array.from({ length: 5 }).forEach((_, itemIndex) => {
           const item = user.preferencesStage1?.[itemIndex];
-          userObj[`העדפות שלב א' ${itemIndex + 1} - פריט מועדף`] = item
+          userObj[`Preferences stage 1' ${itemIndex + 1} - preferred`] = item
             ? item.win
             : "-";
-          userObj[`העדפות שלב א' ${itemIndex + 1} - פריט לא מועדף`] = item
-            ? item.lose
-            : "-";
-          userObj[`העדפות שלב א' ${itemIndex + 1} - זמן`] = item
-            ? `${item.timeTaken} שניות`
+          userObj[`Preferences stage 1' ${itemIndex + 1} - not preferred`] =
+            item ? item.lose : "-";
+          userObj[`Preferences stage 1' ${itemIndex + 1} - time`] = item
+            ? `${item.timeTaken} seconds`
             : "-";
         });
 
-        userObj["זמן שלב ב"] = user.timeTaken ? `${user.timeTaken} שניות` : "-";
+        userObj["Time stage 2"] = user.timeTaken
+          ? `${user.timeTaken} seconds`
+          : "-";
 
         // Handle preferencesStage2 items for testNumber !== 7 in Hebrew
         Array.from({ length: 10 }).forEach((_, index) => {
-          userObj[`העדפות שלב ב' ${index + 1}`] =
+          userObj[`Preferences stage 2' ${index + 1}`] =
             user.preferencesStage2 &&
             user.preferencesStage2.length > index &&
             user.testNumber !== 7
               ? user.preferencesStage2[index]
               : "-";
         });
+        userObj["Number of choises"] = user.choiseCount
+          ? `${user.choiseCount}`
+          : "-";
 
         // Handle preferencesStage2 items for testNumber === 7 in Hebrew
         Array.from({ length: 45 }).forEach((_, itemIndex) => {
-          const item = user.preferencesStage2?.[itemIndex];
-          userObj[`העדפות שלב ב' 7 ${itemIndex + 1} - פריט מועדף`] = item?.win
-            ? item.win
-            : "-";
-          userObj[`העדפות שלב ב' 7 ${itemIndex + 1} - פריט לא מועדף`] =
-            item?.lose ? item.lose : "-";
-          userObj[`העדפות שלב ב' 7 ${itemIndex + 1} - זמן`] = item?.timeTaken
-            ? `${item.timeTaken} שניות`
-            : "-";
+          const item = user.preferencesStage2Choises?.[itemIndex];
+          userObj[`Preferences stage 2 choise ${itemIndex + 1} - preferred`] =
+            item?.win ? item.win : "-";
+          userObj[
+            `Preferences stage 2 choise ${itemIndex + 1} - not preferred`
+          ] = item?.lose ? item.lose : "-";
+          userObj[`Preferences stage 2 choise ${itemIndex + 1} - time`] =
+            item?.timeTaken ? `${item.timeTaken} seconds` : "-";
         });
 
         return userObj;

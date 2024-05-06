@@ -42,6 +42,7 @@ export default function RemoveTheBestTest({ couples }) {
         stage: 3,
         testNumber: 0,
         timeTaken: (Date.now() - timeTaken) / 1000,
+        stage2Timestamp: Date.now(),
       });
       setUser((prev) => ({
         ...prev,

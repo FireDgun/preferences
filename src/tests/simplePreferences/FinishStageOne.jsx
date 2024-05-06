@@ -16,7 +16,7 @@ export default function FinishStageOne() {
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
-        תודה רבה על השתתפותך בשאלון!
+        תודה רבה על השתתפותך בשאלון
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
         שלב 2 יפורסם בקרוב

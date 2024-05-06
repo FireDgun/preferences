@@ -22,13 +22,11 @@ function MoreDetails({ age, setAge, gender, setGender, setCoupleIndex }) {
       }}
     >
       <Box sx={{ p: 2, width: "100%", maxWidth: "500px" }}>
-        {" "}
         {/* You can adjust maxWidth to fit your needs */}
         <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
           פרטים אחרונים
         </Typography>
         <Grid container spacing={2} sx={{ direction: "rtl" }}>
-          {" "}
           {/* Added RTL direction */}
           <Grid item xs={12} md={6}>
             <TextField
@@ -47,9 +45,9 @@ function MoreDetails({ age, setAge, gender, setGender, setCoupleIndex }) {
                 label="מין"
                 onChange={(e) => setGender(e.target.value)}
               >
-                <MenuItem value={"זכר"}>זכר</MenuItem>
-                <MenuItem value={"נקבה"}>נקבה</MenuItem>
-                <MenuItem value={"מעדיף לא לומר"}>מעדיף לא לומר</MenuItem>
+                <MenuItem value={"male"}>זכר</MenuItem>
+                <MenuItem value={"female"}>נקבה</MenuItem>
+                <MenuItem value={"prefer not to say"}>מעדיף לא לומר</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -59,7 +57,7 @@ function MoreDetails({ age, setAge, gender, setGender, setCoupleIndex }) {
           sx={{ mt: 2, width: "100%" }} // Button takes full width
           onClick={() => setCoupleIndex((prev) => prev + 1)}
           disabled={
-            !["זכר", "נקבה", "מעדיף לא לומר"].includes(gender) ||
+            !["male", "female", "prefer not to say"].includes(gender) ||
             age <= 0 ||
             age > 120
           }

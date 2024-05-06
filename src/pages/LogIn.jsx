@@ -51,7 +51,11 @@ export default function LogIn() {
         placeholder="ת.ז"
         dir="rtl"
       />
-      <Button onClick={handleLogin} variant="contained">
+      <Button
+        onClick={handleLogin}
+        variant="contained"
+        disabled={id.length === 0}
+      >
         התחבר
       </Button>
     </Container>

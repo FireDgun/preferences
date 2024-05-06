@@ -30,7 +30,12 @@ export default function IterativeCategorizationTest({
     // Only proceed if adding a product does not exceed the limit
     if (goodProducts.length < maxProductsAllowed) {
       const product = e.dataTransfer.getData("product");
-      if (goodProducts.includes(product) || notGoodProducts.includes(product))
+
+      if (
+        goodProducts.includes(product) ||
+        notGoodProducts.includes(product) ||
+        product === ""
+      )
         return;
       setGoodProducts((prev) => [...prev, product]);
     } else {
@@ -46,7 +51,11 @@ export default function IterativeCategorizationTest({
     // Only proceed if adding a product does not exceed the limit
     if (notGoodProducts.length < maxProductsAllowed) {
       const product = e.dataTransfer.getData("product");
-      if (goodProducts.includes(product) || notGoodProducts.includes(product))
+      if (
+        goodProducts.includes(product) ||
+        notGoodProducts.includes(product) ||
+        product === ""
+      )
         return;
       setNotGoodProducts((prev) => [...prev, product]);
     } else {
@@ -57,14 +66,28 @@ export default function IterativeCategorizationTest({
     }
   };
 
+  const handleDropOut = (e) => {
+    e.preventDefault();
+    const product = e.dataTransfer.getData("product");
+    if (product === "") return;
+    if (goodProducts.includes(product)) {
+      setGoodProducts((prev) => prev.filter((p) => p !== product));
+    } else if (notGoodProducts.includes(product)) {
+      setNotGoodProducts((prev) => prev.filter((p) => p !== product));
+    }
+  };
+
   const allowDrop = (e) => {
     e.preventDefault();
   };
-
   return (
     <div>
       <Typography variant="h4" align="center" gutterBottom>
-        חלק את המוצרים לקטגוריות
+        חלק את המוצרים לקבוצות של{" "}
+        {productsToCategorize.length % 2 === 0
+          ? maxProductsAllowed
+          : `${maxProductsAllowed}-${maxProductsAllowed - 1}`}{" "}
+        מוצרים
       </Typography>
       <Typography variant="h5" align="center" gutterBottom>
         {title}
@@ -88,15 +111,7 @@ export default function IterativeCategorizationTest({
             }}
           >
             {notGoodProducts.map((product, index) => (
-              <Button
-                sx={{ marginX: 1 }}
-                onClick={() =>
-                  setNotGoodProducts((prev) =>
-                    prev.filter((p) => p !== product)
-                  )
-                }
-                key={index}
-              >
+              <Button sx={{ marginX: 1 }} key={index}>
                 <img
                   draggable="true"
                   onDragStart={(e) => handleDragStart(e, product)}
@@ -110,22 +125,35 @@ export default function IterativeCategorizationTest({
         </Grid>
         <Grid item xs={6} sm={6} md={5}>
           <Grid container>
-            {products.map((product, index) =>
-              notGoodProducts.includes("" + product) ||
-              goodProducts.includes("" + product) ? null : (
-                <Grid item xs={6} sm={4} md={3} key={index}>
-                  <Button sx={{ marginX: 1 }}>
-                    <img
-                      draggable="true"
-                      onDragStart={(e) => handleDragStart(e, product)}
-                      src={OPTIONS[`OPTION${product}`]}
-                      alt={`option${index + 1}`}
-                      style={{ width: 125, height: 125 }}
-                    />
-                  </Button>
-                </Grid>
-              )
-            )}
+            <Box
+              onDragOver={allowDrop}
+              onDrop={handleDropOut}
+              sx={{
+                minHeight: 300,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexWrap: "wrap",
+                width: "100%",
+              }}
+            >
+              {products.map((product, index) =>
+                notGoodProducts.includes("" + product) ||
+                goodProducts.includes("" + product) ? null : (
+                  <Grid item xs={6} sm={4} md={3} key={index}>
+                    <Button sx={{ marginX: 1 }}>
+                      <img
+                        draggable="true"
+                        onDragStart={(e) => handleDragStart(e, product)}
+                        src={OPTIONS[`OPTION${product}`]}
+                        alt={`option${index + 1}`}
+                        style={{ width: 125, height: 125 }}
+                      />
+                    </Button>
+                  </Grid>
+                )
+              )}
+            </Box>
           </Grid>
         </Grid>
 
@@ -146,13 +174,7 @@ export default function IterativeCategorizationTest({
             }}
           >
             {goodProducts.map((product, index) => (
-              <Button
-                sx={{ marginX: 1 }}
-                onClick={() =>
-                  setGoodProducts((prev) => prev.filter((p) => p !== product))
-                }
-                key={index}
-              >
+              <Button sx={{ marginX: 1 }} key={index}>
                 <img
                   draggable="true"
                   onDragStart={(e) => handleDragStart(e, product)}

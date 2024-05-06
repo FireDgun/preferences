@@ -2,19 +2,17 @@ import { Box, Button, Grid } from "@mui/material";
 import React, { useState } from "react";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 
-export default function ShowProducts({
+export default function ShowProductsDraggable({
   products,
-  handleChooseProduct,
-  savePlace = true,
-  width = 190,
-  height = 190,
+  handleChooseProduct = () => {},
+  handleDragStart = () => {}, // This is expected to always be provided in this component
+  width = 130,
+  height = 130,
 }) {
   const [removedIndices, setRemovedIndices] = useState(new Set()); // Tracks removed items
 
   const handleRemoveProduct = (effectiveIndex, product) => {
-    if (savePlace) {
-      setRemovedIndices(new Set(removedIndices.add(effectiveIndex))); // Add effective index to removed set
-    }
+    setRemovedIndices(new Set(removedIndices.add(effectiveIndex))); // Add effective index to removed set
     handleChooseProduct(product, OPTIONS_NAME[`OPTION${product}`]);
   };
 
@@ -37,6 +35,8 @@ export default function ShowProducts({
                 <Button
                   onClick={() => handleRemoveProduct(index, product)}
                   sx={{ marginX: 1 }}
+                  onDragStart={(e) => handleDragStart(e, product)}
+                  draggable={true} // Always draggable in this component
                 >
                   <img
                     src={OPTIONS[`OPTION${product}`]}

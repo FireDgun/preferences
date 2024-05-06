@@ -5,6 +5,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
 import ROUTES from "../../routes/routesModel";
+import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
 const handleProductNames = (products) => {
   let productsNames = [];
   products.forEach((product) => {
@@ -18,10 +19,26 @@ export default function TopDownTest({ couples }) {
   const [newProduct, setNewProduct] = useState(couples[0][1]);
   const [timeTaken, setTimeTaken] = useState(null);
   const [indexToCompare, setIndexToCompare] = useState(0);
+  const [choiseCount, setChoiseCount] = useState(0);
+  const [choise, setChoise] = useState([]);
+  const [choiseTimeTaken, setChoiseTimeTaken] = useState(Date.now());
   const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
+
   const handleChooseProduct = (productIndex) => {
+    showBlackScreenForPeriodOfTime(500);
+    setChoiseCount((prev) => prev + 1);
     if (productIndex === 0) {
+      setChoise((prev) => [
+        ...prev,
+        {
+          lose: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
+          win: OPTIONS_NAME["OPTION" + newProduct],
+          timeTaken: (Date.now() - choiseTimeTaken) / 1000,
+        },
+      ]);
+
       setProductsRank((prev) => [
         ...prev.slice(0, indexToCompare + 1), // Includes the item at indexToCompare
         newProduct, // Inserts newProduct after indexToCompare
@@ -31,6 +48,14 @@ export default function TopDownTest({ couples }) {
       setIndexToCompare(productsRank.length);
       setNewProduct(products[productsRank.length + 1]);
     } else {
+      setChoise((prev) => [
+        ...prev,
+        {
+          win: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
+          lose: OPTIONS_NAME["OPTION" + newProduct],
+          timeTaken: (Date.now() - choiseTimeTaken) / 1000,
+        },
+      ]);
       if (indexToCompare === 0) {
         setProductsRank([newProduct, ...productsRank]);
         setIndexToCompare(productsRank.length);
@@ -39,6 +64,7 @@ export default function TopDownTest({ couples }) {
         setIndexToCompare((prev) => prev - 1);
       }
     }
+    setChoiseTimeTaken(Date.now());
   };
 
   const handleDone = useCallback(async () => {
@@ -50,6 +76,9 @@ export default function TopDownTest({ couples }) {
       stage: 3,
       testNumber: 4,
       timeTaken: (Date.now() - timeTaken) / 1000,
+      stage2Timestamp: Date.now(),
+      choiseCount: choiseCount,
+      preferencesStage2Choises: choise,
     });
     setUser((prev) => ({
       ...prev,
@@ -58,7 +87,7 @@ export default function TopDownTest({ couples }) {
       testNumber: 4,
     }));
     navigate(ROUTES.THANK_YOU);
-  }, [navigate, productsRank, setUser, timeTaken, user]);
+  }, [navigate, productsRank, setUser, timeTaken, user, choiseCount, choise]);
 
   useEffect(() => {
     if (!timeTaken) {
@@ -81,18 +110,18 @@ export default function TopDownTest({ couples }) {
         gutterBottom
         sx={{ textAlign: "center", padding: 10 }}
       >
-        איזה מוצר אתה פחות מעדיף?
+        איזה מוצר אתה מעדיף?
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box>
-          <Button onClick={() => handleChooseProduct(0)} sx={{ marginX: 1 }}>
+          <Button onClick={() => handleChooseProduct(1)} sx={{ marginX: 1 }}>
             <img
               src={OPTIONS["OPTION" + productsRank[indexToCompare]]}
               alt="option1"
               style={{ width: 250, height: 250 }}
             />
           </Button>
-          <Button onClick={() => handleChooseProduct(1)} sx={{ marginX: 1 }}>
+          <Button onClick={() => handleChooseProduct(0)} sx={{ marginX: 1 }}>
             <img
               src={OPTIONS["OPTION" + newProduct]}
               alt="option2"

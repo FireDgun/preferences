@@ -5,13 +5,25 @@ import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
 import ROUTES from "../../routes/routesModel";
 import { Box, Button, Typography } from "@mui/material";
-
+import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
+function shuffleInnerPairs(array) {
+  // Map each pair to a new pair, possibly swapping the elements
+  return array.map((pair) => {
+    // Randomly decide whether to swap the elements
+    if (Math.random() > 0.5) {
+      return [pair[1], pair[0]]; // Return a new array with swapped elements
+    } else {
+      return [...pair]; // Return a copy of the original pair
+    }
+  });
+}
 export default function PairwiseStaticTest({ couples }) {
   const [allPossibleCouples, setAllPossibleCouples] = useState(null);
   const [choise, setChoise] = useState([]);
   const [coupleIndex, setCoupleIndex] = useState(0);
   const [startTime, setStartTime] = useState(null);
   const [startTimeChoise, setStartTimeChoise] = useState(Date.now());
+  const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
 
   const { user, setUser } = useUser();
   const navigate = useNavigate();
@@ -38,10 +50,13 @@ export default function PairwiseStaticTest({ couples }) {
         shuffledArray[i],
       ];
     }
-    return shuffledArray;
+    const veryShuffledArray = shuffleInnerPairs(shuffledArray);
+    console.log(veryShuffledArray);
+    return veryShuffledArray;
   };
 
   const handleChooseProduct = async (productIndex) => {
+    showBlackScreenForPeriodOfTime(500);
     if (coupleIndex < allPossibleCouples.length) {
       const endTime = Date.now();
       const timeTaken = (endTime - startTimeChoise) / 1000; // Time taken in milliseconds
@@ -73,10 +88,11 @@ export default function PairwiseStaticTest({ couples }) {
     const handleDone = async () => {
       await setUserOnDb({
         ...user,
-        preferencesStage2: choise,
+        preferencesStage2Choises: choise,
         stage: 3,
         testNumber: 7,
         timeTaken: (Date.now() - startTime) / 1000,
+        stage2Timestamp: Date.now(),
       });
       setUser((prev) => ({
         ...prev,
@@ -102,12 +118,11 @@ export default function PairwiseStaticTest({ couples }) {
 
   return (
     <Box padding={10}>
-      <Typography
-        variant="h6"
-        gutterBottom
-        sx={{ textAlign: "center", padding: 10 }}
-      >
+      <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
         בחרו את המוצר המועדף עליכם
+      </Typography>
+      <Typography variant="h6" sx={{ textAlign: "center", padding: 10 }}>
+        בחירה {coupleIndex + 1} מתוך {allPossibleCouples?.length}
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {allPossibleCouples && coupleIndex < allPossibleCouples.length && (
