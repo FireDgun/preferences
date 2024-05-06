@@ -1,14 +1,34 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
-import { group1Couples } from "../../utils/productsGroupsModels";
+import { group2Couples } from "../../utils/productsGroupsModels";
 import { setUserOnDb } from "../../auth/authService";
 import { useUser } from "../../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import MoreDetails from "./MoreDetails";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
+function shuffleAndGroup(arr) {
+  // Flatten the array
+  const flatArray = arr.flat();
 
+  // Shuffle the flat array using the Fisher-Yates algorithm
+  for (let i = flatArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = flatArray[i];
+    flatArray[i] = flatArray[j];
+    flatArray[j] = temp;
+  }
+
+  // Regroup the flat array into arrays of two elements
+  const result = [];
+  for (let i = 0; i < flatArray.length; i += 2) {
+    result.push([flatArray[i], flatArray[i + 1]]);
+  }
+
+  return result;
+}
+const group1Couples = shuffleAndGroup(group2Couples);
 export default function SimplePreferencesTest() {
   const [choise, setChoise] = useState([]);
   const [coupleIndex, setCoupleIndex] = useState(0);
