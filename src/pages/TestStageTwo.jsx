@@ -10,14 +10,14 @@ import IterativeCategorizationManager from "../tests/iterativeCategorization/Ite
 import StaticTestManager from "../tests/static/StaticTestManager";
 import AttentionQuestionTest from "../tests/attentionQuestion/AttentionQuestionTest";
 // Function to shuffle an array
-const shuffleArray = (array) => {
-  const shuffledArray = [...array];
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-  return shuffledArray;
-};
+// const shuffleArray = (array) => {
+//   const shuffledArray = [...array];
+//   for (let i = shuffledArray.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+//   }
+//   return shuffledArray;
+// };
 
 function shuffleAndGroup(arr) {
   // Flatten the array
