@@ -41,7 +41,9 @@ const decideAboutUserGroups = async () => {
 const setUserOnDb = async (user) => {
   try {
     const userRef = doc(db, "users", user.id);
-    await setDoc(userRef, user);
+    let didAnswerAttentionQuestion =
+      localStorage.getItem("attentionQuestion") === "0";
+    await setDoc(userRef, { ...user, didAnswerAttentionQuestion });
     console.log(`User updated with ID: ${user.id}`);
   } catch (error) {
     console.error("Error in setUser:", error);

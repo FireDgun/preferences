@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
 import ROUTES from "../../routes/routesModel";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
+import DesignedButton from "../components/DesignedButton";
 function shuffleInnerPairs(array) {
   // Map each pair to a new pair, possibly swapping the elements
   return array.map((pair) => {
@@ -17,12 +18,87 @@ function shuffleInnerPairs(array) {
     }
   });
 }
+function multiplyMatrices(matrixA, matrixB) {
+  // Check if multiplication is possible
+  if (matrixA[0].length !== matrixB.length) {
+    throw new Error("Matrix dimensions do not allow multiplication.");
+  }
+
+  // Initialize the result matrix with zeros
+  let resultMatrix = new Array(matrixA.length)
+    .fill(null)
+    .map(() => new Array(matrixB[0].length).fill(0));
+
+  // Multiply matrices
+  for (let i = 0; i < matrixA.length; i++) {
+    for (let j = 0; j < matrixB[0].length; j++) {
+      for (let k = 0; k < matrixA[0].length; k++) {
+        resultMatrix[i][j] += matrixA[i][k] * matrixB[k][j];
+      }
+    }
+  }
+
+  return resultMatrix;
+}
+
+function sumMatrices(...matrices) {
+  // Check if there are matrices to sum
+  if (matrices.length === 0) {
+    throw new Error("No matrices provided for summation.");
+  }
+
+  // Check for consistent dimensions across matrices
+  const numRows = matrices[0].length;
+  const numCols = matrices[0][0].length;
+
+  for (const matrix of matrices) {
+    if (matrix.length !== numRows || matrix[0].length !== numCols) {
+      throw new Error("All matrices must have the same dimensions.");
+    }
+  }
+
+  // Initialize the result matrix with zeros
+  let resultMatrix = new Array(numRows)
+    .fill(null)
+    .map(() => new Array(numCols).fill(0));
+
+  // Sum the matrices
+  for (const matrix of matrices) {
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+        resultMatrix[i][j] += matrix[i][j];
+      }
+    }
+  }
+
+  return resultMatrix;
+}
+
+function sumMainDiagonal(matrix) {
+  // Check if the matrix is square
+  if (!matrix.length || matrix.length !== matrix[0].length) {
+    throw new Error(
+      "Matrix must be square to calculate the sum of the main diagonal."
+    );
+  }
+
+  let sum = 0;
+  for (let i = 0; i < matrix.length; i++) {
+    sum += matrix[i][i]; // Add the diagonal element at [i][i]
+  }
+
+  return sum;
+}
+
 export default function PairwiseStaticTest({ couples }) {
   const [allPossibleCouples, setAllPossibleCouples] = useState(null);
   const [choise, setChoise] = useState([]);
   const [coupleIndex, setCoupleIndex] = useState(0);
   const [startTime, setStartTime] = useState(null);
   const [startTimeChoise, setStartTimeChoise] = useState(Date.now());
+  const [transitivityMatrix, setTransitivityMatrix] = useState(
+    new Array(10).fill(null).map(() => new Array(10).fill(0))
+  );
   const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
 
   const { user, setUser } = useUser();
@@ -51,13 +127,21 @@ export default function PairwiseStaticTest({ couples }) {
       ];
     }
     const veryShuffledArray = shuffleInnerPairs(shuffledArray);
-    console.log(veryShuffledArray);
     return veryShuffledArray;
   };
 
   const handleChooseProduct = async (productIndex) => {
     showBlackScreenForPeriodOfTime(500);
     if (coupleIndex < allPossibleCouples.length) {
+      const selectedProductIndex =
+        allPossibleCouples[coupleIndex][productIndex];
+      const nonSelectedProductIndex =
+        allPossibleCouples[coupleIndex][1 - productIndex];
+      setTransitivityMatrix((prevMatrix) => {
+        const newMatrix = prevMatrix.map((row) => [...row]);
+        newMatrix[selectedProductIndex][nonSelectedProductIndex] = 1;
+        return newMatrix;
+      });
       const endTime = Date.now();
       const timeTaken = (endTime - startTimeChoise) / 1000; // Time taken in milliseconds
 
@@ -86,6 +170,19 @@ export default function PairwiseStaticTest({ couples }) {
     }
 
     const handleDone = async () => {
+      const x1 = transitivityMatrix;
+      const x2 = multiplyMatrices(x1, x1);
+      const x3 = multiplyMatrices(x2, x1);
+      const x4 = multiplyMatrices(x3, x1);
+      const x5 = multiplyMatrices(x4, x1);
+      const x6 = multiplyMatrices(x5, x1);
+      const x7 = multiplyMatrices(x6, x1);
+      const x8 = multiplyMatrices(x7, x1);
+      const x9 = multiplyMatrices(x8, x1);
+      const x10 = multiplyMatrices(x9, x1);
+      const X = sumMatrices(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10);
+      const transitivityResult = sumMainDiagonal(X);
+      console.log(transitivityResult);
       await setUserOnDb({
         ...user,
         preferencesStage2Choises: choise,
@@ -93,6 +190,7 @@ export default function PairwiseStaticTest({ couples }) {
         testNumber: 7,
         timeTaken: (Date.now() - startTime) / 1000,
         stage2Timestamp: Date.now(),
+        transitivityResult: transitivityResult,
       });
       setUser((prev) => ({
         ...prev,
@@ -114,6 +212,7 @@ export default function PairwiseStaticTest({ couples }) {
     setUser,
     user,
     allPossibleCouples,
+    transitivityMatrix,
   ]);
 
   return (
@@ -127,20 +226,26 @@ export default function PairwiseStaticTest({ couples }) {
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {allPossibleCouples && coupleIndex < allPossibleCouples.length && (
           <Box key={coupleIndex}>
-            <Button onClick={() => handleChooseProduct(0)} sx={{ marginX: 1 }}>
+            <DesignedButton
+              onClick={() => handleChooseProduct(0)}
+              sx={{ marginX: 1 }}
+            >
               <img
                 src={OPTIONS["OPTION" + allPossibleCouples[coupleIndex][0]]}
                 alt="option1"
                 style={{ width: 250, height: 250 }}
               />
-            </Button>
-            <Button onClick={() => handleChooseProduct(1)} sx={{ marginX: 1 }}>
+            </DesignedButton>
+            <DesignedButton
+              onClick={() => handleChooseProduct(1)}
+              sx={{ marginX: 1 }}
+            >
               <img
                 src={OPTIONS["OPTION" + allPossibleCouples[coupleIndex][1]]}
                 alt="option2"
                 style={{ width: 250, height: 250 }}
               />
-            </Button>
+            </DesignedButton>
           </Box>
         )}
       </Box>

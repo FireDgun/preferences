@@ -45,6 +45,7 @@ function MoreDetails({ age, setAge, gender, setGender, setCoupleIndex }) {
                 label="מין"
                 onChange={(e) => setGender(e.target.value)}
               >
+                <MenuItem value={""}></MenuItem>
                 <MenuItem value={"male"}>זכר</MenuItem>
                 <MenuItem value={"female"}>נקבה</MenuItem>
                 <MenuItem value={"prefer not to say"}>מעדיף לא לומר</MenuItem>

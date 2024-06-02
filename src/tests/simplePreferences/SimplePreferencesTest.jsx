@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { group2Couples } from "../../utils/productsGroupsModels";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import MoreDetails from "./MoreDetails";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
+import DesignedButton from "../components/DesignedButton";
 function shuffleAndGroup(arr) {
   // Flatten the array
   const flatArray = arr.flat();
@@ -28,36 +29,55 @@ function shuffleAndGroup(arr) {
 
   return result;
 }
+function shuffleArray(array) {
+  let copy = array.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 const group1Couples = shuffleAndGroup(group2Couples);
+const dummyCouples = shuffleArray([
+  [10, 11],
+  [12, 10],
+  [11, 14],
+  [13, 11],
+  [12, 13],
+  [14, 13],
+]);
+group1Couples.push(...dummyCouples);
 export default function SimplePreferencesTest() {
   const [choise, setChoise] = useState([]);
   const [coupleIndex, setCoupleIndex] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [age, setAge] = useState(0);
-  const [gender, setGender] = useState(0);
+  const [gender, setGender] = useState("");
   const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-
   const handleChooseProduct = async (productIndex) => {
     showBlackScreenForPeriodOfTime(500);
     if (coupleIndex < group1Couples.length) {
-      const endTime = Date.now();
-      const timeTaken = (endTime - startTime) / 1000; // Time taken in milliseconds
-      setStartTime(Date.now());
+      if (coupleIndex < group1Couples.length - dummyCouples.length) {
+        const endTime = Date.now();
+        const timeTaken = (endTime - startTime) / 1000; // Time taken in milliseconds
+        setStartTime(Date.now());
 
-      setChoise((prev) => [
-        ...prev,
-        {
-          win: OPTIONS_NAME[
-            "OPTION" + group1Couples[coupleIndex][productIndex]
-          ],
-          lose: OPTIONS_NAME[
-            "OPTION" + group1Couples[coupleIndex][1 - productIndex]
-          ],
-          timeTaken: timeTaken,
-        },
-      ]);
+        setChoise((prev) => [
+          ...prev,
+          {
+            win: OPTIONS_NAME[
+              "OPTION" + group1Couples[coupleIndex][productIndex]
+            ],
+            lose: OPTIONS_NAME[
+              "OPTION" + group1Couples[coupleIndex][1 - productIndex]
+            ],
+            timeTaken: timeTaken,
+          },
+        ]);
+      }
       setCoupleIndex((prev) => prev + 1);
     } else {
       console.log("done");
@@ -83,6 +103,7 @@ export default function SimplePreferencesTest() {
   }, [coupleIndex, handleDone]);
 
   if (coupleIndex === group1Couples.length) {
+    console.log("choise", choise);
     return (
       <MoreDetails
         age={age}
@@ -106,20 +127,26 @@ export default function SimplePreferencesTest() {
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {coupleIndex < group1Couples.length && (
           <Box key={coupleIndex}>
-            <Button onClick={() => handleChooseProduct(0)} sx={{ marginX: 1 }}>
+            <DesignedButton
+              onClick={() => handleChooseProduct(0)}
+              sx={{ marginX: 1 }}
+            >
               <img
                 src={OPTIONS["OPTION" + group1Couples[coupleIndex][0]]}
                 alt="option1"
                 style={{ width: 250, height: 250 }}
               />
-            </Button>
-            <Button onClick={() => handleChooseProduct(1)} sx={{ marginX: 1 }}>
+            </DesignedButton>
+            <DesignedButton
+              onClick={() => handleChooseProduct(1)}
+              sx={{ marginX: 1 }}
+            >
               <img
                 src={OPTIONS["OPTION" + group1Couples[coupleIndex][1]]}
                 alt="option2"
                 style={{ width: 250, height: 250 }}
               />
-            </Button>
+            </DesignedButton>
           </Box>
         )}
       </Box>

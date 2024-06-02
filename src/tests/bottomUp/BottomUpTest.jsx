@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
 import ROUTES from "../../routes/routesModel";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
+import DesignedButton from "../components/DesignedButton";
 
 export default function BottomUpTest({ couples }) {
   const [productsRank, setProductsRank] = useState([couples[0][0]]);
@@ -113,20 +114,26 @@ export default function BottomUpTest({ couples }) {
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box>
-          <Button onClick={() => handleChooseProduct(0)} sx={{ marginX: 1 }}>
+          <DesignedButton
+            onClick={() => handleChooseProduct(0)}
+            sx={{ marginX: 1 }}
+          >
             <img
               src={OPTIONS["OPTION" + productsRank[indexToCompare]]}
               alt="option1"
               style={{ width: 250, height: 250 }}
             />
-          </Button>
-          <Button onClick={() => handleChooseProduct(1)} sx={{ marginX: 1 }}>
+          </DesignedButton>
+          <DesignedButton
+            onClick={() => handleChooseProduct(1)}
+            sx={{ marginX: 1 }}
+          >
             <img
               src={OPTIONS["OPTION" + newProduct]}
               alt="option2"
               style={{ width: 250, height: 250 }}
             />
-          </Button>
+          </DesignedButton>
         </Box>
       </Box>
     </Box>

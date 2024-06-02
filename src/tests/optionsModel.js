@@ -13,6 +13,7 @@ const OPTIONS_NAME = {
   OPTION11: "wallet",
   OPTION12: "officeLamp",
   OPTION13: "plantPot",
+  OPTION14: "candle",
 };
 const OPTIONS = {
   OPTION0: `/assets/${OPTIONS_NAME.OPTION0}.png`,
@@ -29,6 +30,7 @@ const OPTIONS = {
   OPTION11: `/assets/${OPTIONS_NAME.OPTION11}.png`,
   OPTION12: `/assets/${OPTIONS_NAME.OPTION12}.png`,
   OPTION13: `/assets/${OPTIONS_NAME.OPTION13}.png`,
+  OPTION14: `/assets/${OPTIONS_NAME.OPTION14}.png`,
 };
 
 export { OPTIONS, OPTIONS_NAME };

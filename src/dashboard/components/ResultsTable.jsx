@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as XLSX from "xlsx";
 
-const colsWithLeftBorder = ["10", "26", "37", "82"];
+const colsWithLeftBorder = ["12", "28", "39", "84"];
 // Helper function to determine the stage description
 const getStageDescription = (stage) => {
   switch (stage) {
@@ -114,6 +114,13 @@ export default function ResultsTable({ data }) {
           Age: user.age,
           Gender: user.gender,
           Group: user.group,
+          "transitivity Result":
+            typeof user.transitivityResult !== "undefined"
+              ? user.transitivityResult
+              : "",
+          "Answer Attention Question First Try": Boolean(
+            user.didAnswerAttentionQuestion
+          ).toString(),
           choiseCount: user.choiseCount ? user.choiseCount : "",
           Stage: getStageDescription(user.stage), // Assuming this already returns a Hebrew description
           "Test Name": getTestDescription(user.group), // Assuming this already returns a Hebrew description
@@ -222,7 +229,9 @@ export default function ResultsTable({ data }) {
                         : "none",
                     }}
                   >
-                    <Typography variant="body2">{item[header]}</Typography>
+                    <Typography variant="body2">
+                      {item[header] !== undefined ? item[header] : ""}
+                    </Typography>
                   </TableCell>
                 ))}
               </TableRow>
