@@ -9,6 +9,8 @@ import PairwiseStaticTest from "../tests/pairwiseStatic/PairwiseStaticTest";
 import IterativeCategorizationManager from "../tests/iterativeCategorization/IterativeCategorizationManager";
 import StaticTestManager from "../tests/static/StaticTestManager";
 import AttentionQuestionTest from "../tests/attentionQuestion/AttentionQuestionTest";
+import WelcomeStage2 from "./WelcomeStage2";
+import WelcomeStage2AfterAttention from "./WelcomeStage2AfterAttention";
 // Function to shuffle an array
 // const shuffleArray = (array) => {
 //   const shuffledArray = [...array];
@@ -44,6 +46,10 @@ export default function TestStageTwo() {
   const [couples, setCouples] = useState([]);
   const [testNumber, setTestNumber] = useState(null);
   const [isDidPractice, setIsDidPractice] = useState(false);
+  const [isSeeWelcomePage, setIsSeeWelcomePage] = useState(false);
+  const [isSeeWelcomePageAfterAttention, setIsSeeWelcomePageAfterAttention] =
+    useState(false);
+
   const { user } = useUser();
 
   useEffect(() => {
@@ -60,10 +66,16 @@ export default function TestStageTwo() {
   testNumber === null && <div>Loading...</div>;
   return (
     <>
-      {!isDidPractice ? (
+      {!isSeeWelcomePage ? (
+        <WelcomeStage2 handleButtonClick={() => setIsSeeWelcomePage(true)} />
+      ) : !isDidPractice ? (
         <>
           <AttentionQuestionTest handleFinish={() => setIsDidPractice(true)} />
         </>
+      ) : !isSeeWelcomePageAfterAttention ? (
+        <WelcomeStage2AfterAttention
+          handleButtonClick={() => setIsSeeWelcomePageAfterAttention(true)}
+        />
       ) : (
         <>
           {testNumber === 0 && <RemoveTheBestTest couples={couples} />}
