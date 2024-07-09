@@ -35,7 +35,7 @@ export default function RemoveTheBestTest({ couples }) {
       setTimeTaken(Date.now());
     }
     const choosePrize = (choices) => {
-      let rnd = Math.floor((Math.random() - 0.01) * (choices.length + 5));
+      let rnd = Math.floor((Math.random() - 0.01) * (choices.length + 4));
       if (rnd < 5) {
         return user.preferencesStage1[rnd].win;
       }
