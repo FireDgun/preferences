@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as XLSX from "xlsx";
 
-const colsWithLeftBorder = ["13", "29", "40", "85"];
+const colsWithLeftBorder = ["13", "28", "39", "84"];
 // Helper function to determine the stage description
 const getStageDescription = (stage) => {
   switch (stage) {
@@ -156,9 +156,6 @@ export default function ResultsTable({ data }) {
               ? user.preferencesStage2[index]
               : "-";
         });
-        userObj["Number of choises"] = user.choiseCount
-          ? `${user.choiseCount}`
-          : "-";
 
         // Handle preferencesStage2 items for testNumber === 7 in Hebrew
         Array.from({ length: 45 }).forEach((_, itemIndex) => {
