@@ -37,7 +37,6 @@ function multiplyMatrices(matrixA, matrixB) {
       }
     }
   }
-
   return resultMatrix;
 }
 
@@ -140,6 +139,7 @@ export default function PairwiseStaticTest({ couples }) {
       setTransitivityMatrix((prevMatrix) => {
         const newMatrix = prevMatrix.map((row) => [...row]);
         newMatrix[selectedProductIndex][nonSelectedProductIndex] = 1;
+        console.log(newMatrix);
         return newMatrix;
       });
       const endTime = Date.now();
@@ -163,7 +163,10 @@ export default function PairwiseStaticTest({ couples }) {
       console.log("done");
     }
   };
-
+  const choosePrize = (choices) => {
+    let rnd = Math.floor((Math.random() - 0.01) * choices.length);
+    return choices[rnd].win;
+  };
   useEffect(() => {
     if (!startTime) {
       setStartTime(Date.now());
@@ -181,6 +184,7 @@ export default function PairwiseStaticTest({ couples }) {
       const x9 = multiplyMatrices(x8, x1);
       const x10 = multiplyMatrices(x9, x1);
       const X = sumMatrices(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10);
+      console.log("X is ", X);
       const transitivityResult = sumMainDiagonal(X);
       console.log(transitivityResult);
       await setUserOnDb({
@@ -191,6 +195,7 @@ export default function PairwiseStaticTest({ couples }) {
         timeTaken: (Date.now() - startTime) / 1000,
         stage2Timestamp: Date.now(),
         transitivityResult: transitivityResult,
+        prize: choosePrize([...choise, ...user.preferencesStage1]),
       });
       setUser((prev) => ({
         ...prev,

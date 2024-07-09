@@ -27,7 +27,6 @@ const StaticTest = ({ couples, handleDone, title = "" }) => {
     setRankedProducts(newRankedProducts);
     setProducts((prev) => prev.filter((p) => p !== product));
   };
-  console.log(rankedProducts);
 
   const handleRemoveRanked = (e, rank) => {
     e.preventDefault();

@@ -34,6 +34,14 @@ export default function RemoveTheBestTest({ couples }) {
     if (!timeTaken) {
       setTimeTaken(Date.now());
     }
+    const choosePrize = (choices) => {
+      let rnd = Math.floor((Math.random() - 0.01) * (choices.length + 5));
+      if (rnd < 5) {
+        return user.preferencesStage1[rnd].win;
+      }
+
+      return choices[rnd - 5];
+    };
 
     const handleDone = async () => {
       await setUserOnDb({
@@ -43,6 +51,7 @@ export default function RemoveTheBestTest({ couples }) {
         testNumber: 0,
         timeTaken: (Date.now() - timeTaken) / 1000,
         stage2Timestamp: Date.now(),
+        prize: choosePrize(productsRank),
       });
       setUser((prev) => ({
         ...prev,

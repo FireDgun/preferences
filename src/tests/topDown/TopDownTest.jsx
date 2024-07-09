@@ -67,7 +67,10 @@ export default function TopDownTest({ couples }) {
     }
     setChoiseTimeTaken(Date.now());
   };
-
+  const choosePrize = (choices) => {
+    let rnd = Math.floor((Math.random() - 0.01) * choices.length);
+    return choices[rnd].win;
+  };
   const handleDone = useCallback(async () => {
     let productsNames = handleProductNames(productsRank);
     productsNames = productsNames.reverse();
@@ -80,6 +83,7 @@ export default function TopDownTest({ couples }) {
       stage2Timestamp: Date.now(),
       choiseCount: choiseCount,
       preferencesStage2Choises: choise,
+      prize: choosePrize([...choise, ...user.preferencesStage1]),
     });
     setUser((prev) => ({
       ...prev,

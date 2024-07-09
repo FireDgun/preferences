@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as XLSX from "xlsx";
 
-const colsWithLeftBorder = ["12", "28", "39", "84"];
+const colsWithLeftBorder = ["13", "29", "40", "85"];
 // Helper function to determine the stage description
 const getStageDescription = (stage) => {
   switch (stage) {
@@ -114,6 +114,7 @@ export default function ResultsTable({ data }) {
           Age: user.age,
           Gender: user.gender,
           Group: user.group,
+          Prize: user.prize || "",
           "transitivity Result":
             typeof user.transitivityResult !== "undefined"
               ? user.transitivityResult

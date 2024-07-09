@@ -27,6 +27,7 @@ export default function IterativeCategorizationManager({ couples }) {
   const [product2, setProduct2] = useState(null);
   const [timeTaken, setTimeTaken] = useState(null);
   const [isExampleDone, setIsExampleDone] = useState(false);
+  const [prize, setPrize] = useState("");
   const { user, setUser } = useUser();
   const navigate = useNavigate();
 
@@ -69,6 +70,7 @@ export default function IterativeCategorizationManager({ couples }) {
         testNumber: 5,
         timeTaken: (Date.now() - timeTaken) / 1000,
         stage2Timestamp: Date.now(),
+        prize: prize,
       });
       setUser((prev) => ({
         ...prev,
@@ -104,14 +106,24 @@ export default function IterativeCategorizationManager({ couples }) {
     user,
     timeTaken,
     setUser,
+    prize,
   ]);
+
+  const choosePrize = (choices) => {
+    let rnd = Math.floor((Math.random() - 0.01) * (choices.length + 5));
+    if (rnd < 5) {
+      return user.preferencesStage1[rnd].win;
+    }
+
+    return OPTIONS_NAME["OPTION" + choices[rnd - 5]];
+  };
 
   const handleFinishCategorization = (goodProducts, notGoodProducts) => {
     switch (categotizationLevel) {
       case 0:
         setProductsRank([notGoodProducts, goodProducts]);
         setProductsToCategorize(goodProducts);
-
+        setPrize(choosePrize(goodProducts));
         setCategotizationLevel(1);
         break;
       case 1:

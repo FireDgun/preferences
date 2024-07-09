@@ -69,6 +69,11 @@ export default function BottomUpTest({ couples }) {
     return productsNames;
   };
 
+  const choosePrize = (choices) => {
+    let rnd = Math.floor((Math.random() - 0.01) * choices.length);
+    return choices[rnd].win;
+  };
+
   useEffect(() => {
     if (!timeTaken) {
       setTimeTaken(Date.now());
@@ -84,6 +89,7 @@ export default function BottomUpTest({ couples }) {
         stage2Timestamp: Date.now(),
         choiseCount: choiseCount,
         preferencesStage2Choises: choise,
+        prize: choosePrize([...choise, ...user.preferencesStage1]),
       });
       setUser((prev) => ({
         ...prev,
@@ -102,7 +108,6 @@ export default function BottomUpTest({ couples }) {
     return <div>טוען...</div>;
   }
 
-  console.log(choise);
   return (
     <Box padding={10}>
       <Typography
