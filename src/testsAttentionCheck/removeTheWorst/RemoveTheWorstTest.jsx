@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ShowProducts from "../components/ShowProducts";
 import { Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import ROUTES from "../../routes/routesModel";
+
 import { setUserOnDb } from "../../auth/authService";
 import { useUser } from "../../providers/UserProvider";
 import { OPTIONS_NAME } from "../optionsModel";
 
-export default function RemoveTheWorstTest({ couples }) {
+export default function RemoveTheWorstTest({ couples, handleFinish }) {
   const [productsRank, setProductsRank] = useState([]);
   const [products, setProducts] = useState(couples.flat());
   const [timeTaken, setTimeTaken] = useState(null);
   const { user, setUser } = useUser();
-  const navigate = useNavigate();
   const handleChooseProduct = (productNumber, productName) => {
     if (products.length === 2) {
       let theOtherProduct = products.find(
@@ -33,50 +31,38 @@ export default function RemoveTheWorstTest({ couples }) {
     if (!timeTaken) {
       setTimeTaken(Date.now());
     }
-    const choosePrize = (choices) => {
-      let rnd = Math.floor((Math.random() - 0.01) * (choices.length + 5)); //11
-      if (rnd < 5) {
-        return user.preferencesStage1[rnd].win;
-      }
-      let temp = rnd - 5;
-      let rnd2 = Math.floor((Math.random() - 0.01) * temp);
-      return choices[rnd2];
-    };
 
     const handleDone = async () => {
       await setUserOnDb({
         ...user,
-        preferencesStage2: productsRank.toReversed(),
-        stage: 3,
-        testNumber: 1,
-        timeTaken: (Date.now() - timeTaken) / 1000,
-        stage2Timestamp: Date.now(),
-        prize: choosePrize(productsRank.toReversed()),
+        preferencesStage2Attention: productsRank.toReversed(),
+        timeTakenAttention: (Date.now() - timeTaken) / 1000,
       });
       setUser((prev) => ({
         ...prev,
-        preferencesStage2: productsRank.toReversed(),
-        stage: 3,
-        testNumber: 1,
+        preferencesStage2Attention: productsRank.toReversed(),
       }));
-      navigate(ROUTES.THANK_YOU);
+      handleFinish();
     };
     if (products.length === 0) {
       handleDone();
     }
-  }, [products, timeTaken, productsRank, navigate, setUser, user]);
+  }, [products, timeTaken, productsRank, handleFinish, setUser, user]);
   console.log(productsRank);
   console.log(user);
 
   return (
     <div>
+      <Typography variant="h4" align="center">
+        ג'ון תמיד מעדיף יותר כסף מאשר פחות כסף
+      </Typography>
       {productsRank.length > 0 && (
         <Typography variant="h4" align="center">
-          מבין המוצרים שנשארו
+          מבין הבחירות שנשארו
         </Typography>
       )}
       <Typography variant="h4" align="center">
-        בחר את המוצר שהכי פחות טוב לדעתך
+        בחר את האפשרות שג'ון הכי פחות מעדיף
       </Typography>
       <ShowProducts
         products={products}

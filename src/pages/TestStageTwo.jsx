@@ -70,7 +70,10 @@ export default function TestStageTwo() {
         <WelcomeStage2 handleButtonClick={() => setIsSeeWelcomePage(true)} />
       ) : !isDidPractice ? (
         <>
-          <AttentionQuestionTest handleFinish={() => setIsDidPractice(true)} />
+          <AttentionQuestionTest
+            handleFinish={() => setIsDidPractice(true)}
+            testNumber={testNumber}
+          />
         </>
       ) : !isSeeWelcomePageAfterAttention ? (
         <WelcomeStage2AfterAttention

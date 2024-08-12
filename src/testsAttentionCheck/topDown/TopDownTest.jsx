@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useUser } from "../../providers/UserProvider";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
-import ROUTES from "../../routes/routesModel";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
 import DesignedButton from "../components/DesignedButton";
 const handleProductNames = (products) => {
@@ -14,7 +12,7 @@ const handleProductNames = (products) => {
   });
   return productsNames;
 };
-export default function TopDownTest({ couples }) {
+export default function TopDownTest({ couples, handleFinish }) {
   const [productsRank, setProductsRank] = useState([couples[0][0]]);
   const products = couples.flat();
   const [newProduct, setNewProduct] = useState(couples[0][1]);
@@ -24,7 +22,6 @@ export default function TopDownTest({ couples }) {
   const [choise, setChoise] = useState([]);
   const [choiseTimeTaken, setChoiseTimeTaken] = useState(Date.now());
   const { user, setUser } = useUser();
-  const navigate = useNavigate();
   const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
 
   const handleChooseProduct = (productIndex) => {
@@ -67,32 +64,31 @@ export default function TopDownTest({ couples }) {
     }
     setChoiseTimeTaken(Date.now());
   };
-  const choosePrize = (choices) => {
-    let rnd = Math.floor((Math.random() - 0.01) * choices.length);
-    return choices[rnd].win;
-  };
+
   const handleDone = useCallback(async () => {
     let productsNames = handleProductNames(productsRank);
     productsNames = productsNames.toReversed();
     await setUserOnDb({
       ...user,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 4,
-      timeTaken: (Date.now() - timeTaken) / 1000,
-      stage2Timestamp: Date.now(),
-      choiseCount: choiseCount,
-      preferencesStage2Choises: choise,
-      prize: choosePrize([...choise, ...user.preferencesStage1]),
+      preferencesStage2Attention: productsNames,
+      timeTakenAttention: (Date.now() - timeTaken) / 1000,
     });
     setUser((prev) => ({
       ...prev,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 4,
+      preferencesStage2Attention: productsNames,
     }));
-    navigate(ROUTES.THANK_YOU);
-  }, [navigate, productsRank, setUser, timeTaken, user, choiseCount, choise]);
+    handleFinish();
+    console.log(choise); //use it just for cancel the warning
+    console.log(choiseCount); //use it just for cancel the warning
+  }, [
+    handleFinish,
+    productsRank,
+    setUser,
+    timeTaken,
+    user,
+    choiseCount,
+    choise,
+  ]);
 
   useEffect(() => {
     if (!timeTaken) {
@@ -100,7 +96,7 @@ export default function TopDownTest({ couples }) {
     }
   }, [timeTaken]);
   useEffect(() => {
-    if (productsRank.length === 10) {
+    if (productsRank.length === 2) {
       handleDone();
     }
   }, [productsRank, handleDone]);
@@ -110,12 +106,15 @@ export default function TopDownTest({ couples }) {
   }
   return (
     <Box padding={10}>
+      <Typography variant="h4" align="center">
+        ג'ון תמיד מעדיף יותר כסף מאשר פחות כסף
+      </Typography>
       <Typography
         variant="h6"
         gutterBottom
         sx={{ textAlign: "center", padding: 10 }}
       >
-        איזה מוצר אתה מעדיף?
+        איזה אפשרות ג'ון יעדיף?
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box>

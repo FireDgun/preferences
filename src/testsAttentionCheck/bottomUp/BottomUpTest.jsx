@@ -1,20 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../providers/UserProvider";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { OPTIONS, OPTIONS_NAME } from "../optionsModel";
 import { setUserOnDb } from "../../auth/authService";
-import ROUTES from "../../routes/routesModel";
 import { useShowBlackScreenForPeriodOfTime } from "../../providers/ShowBlackScreenForPeriodOfTimeProvider";
 import DesignedButton from "../components/DesignedButton";
-const handleProductNames = (products) => {
-  let productsNames = [];
-  products.forEach((product) => {
-    productsNames.push(OPTIONS_NAME["OPTION" + product]);
-  });
-  return productsNames;
-};
-export default function TopDownTest({ couples }) {
+
+export default function BottomUpTest({ couples, handleFinish }) {
   const [productsRank, setProductsRank] = useState([couples[0][0]]);
   const products = couples.flat();
   const [newProduct, setNewProduct] = useState(couples[0][1]);
@@ -24,36 +16,34 @@ export default function TopDownTest({ couples }) {
   const [choise, setChoise] = useState([]);
   const [choiseTimeTaken, setChoiseTimeTaken] = useState(Date.now());
   const { user, setUser } = useUser();
-  const navigate = useNavigate();
   const showBlackScreenForPeriodOfTime = useShowBlackScreenForPeriodOfTime();
 
   const handleChooseProduct = (productIndex) => {
     showBlackScreenForPeriodOfTime(500);
     setChoiseCount((prev) => prev + 1);
-    if (productIndex === 0) {
-      setChoise((prev) => [
-        ...prev,
-        {
-          lose: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
-          win: OPTIONS_NAME["OPTION" + newProduct],
-          timeTaken: (Date.now() - choiseTimeTaken) / 1000,
-        },
-      ]);
 
+    if (productIndex === 0) {
       setProductsRank((prev) => [
         ...prev.slice(0, indexToCompare + 1), // Includes the item at indexToCompare
         newProduct, // Inserts newProduct after indexToCompare
         ...prev.slice(indexToCompare + 1), // Rest of the array after indexToCompare
       ]);
-
+      setChoise((prev) => [
+        ...prev,
+        {
+          win: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
+          lose: OPTIONS_NAME["OPTION" + newProduct],
+          timeTaken: (Date.now() - choiseTimeTaken) / 1000,
+        },
+      ]);
       setIndexToCompare(productsRank.length);
       setNewProduct(products[productsRank.length + 1]);
     } else {
       setChoise((prev) => [
         ...prev,
         {
-          win: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
-          lose: OPTIONS_NAME["OPTION" + newProduct],
+          lose: OPTIONS_NAME["OPTION" + productsRank[indexToCompare]],
+          win: OPTIONS_NAME["OPTION" + newProduct],
           timeTaken: (Date.now() - choiseTimeTaken) / 1000,
         },
       ]);
@@ -67,60 +57,66 @@ export default function TopDownTest({ couples }) {
     }
     setChoiseTimeTaken(Date.now());
   };
-  const choosePrize = (choices) => {
-    let rnd = Math.floor((Math.random() - 0.01) * choices.length);
-    return choices[rnd].win;
-  };
-  const handleDone = useCallback(async () => {
-    let productsNames = handleProductNames(productsRank);
-    productsNames = productsNames.toReversed();
-    await setUserOnDb({
-      ...user,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 4,
-      timeTaken: (Date.now() - timeTaken) / 1000,
-      stage2Timestamp: Date.now(),
-      choiseCount: choiseCount,
-      preferencesStage2Choises: choise,
-      prize: choosePrize([...choise, ...user.preferencesStage1]),
+
+  const handleProductNames = (products) => {
+    let productsNames = [];
+    products.forEach((product) => {
+      productsNames.push(OPTIONS_NAME["OPTION" + product]);
     });
-    setUser((prev) => ({
-      ...prev,
-      preferencesStage2: productsNames,
-      stage: 3,
-      testNumber: 4,
-    }));
-    navigate(ROUTES.THANK_YOU);
-  }, [navigate, productsRank, setUser, timeTaken, user, choiseCount, choise]);
+    return productsNames;
+  };
 
   useEffect(() => {
     if (!timeTaken) {
       setTimeTaken(Date.now());
     }
-  }, [timeTaken]);
-  useEffect(() => {
-    if (productsRank.length === 10) {
+    const handleDone = async () => {
+      let productsNames = handleProductNames(productsRank);
+      await setUserOnDb({
+        ...user,
+        preferencesStage2Attention: productsNames,
+
+        timeTakenAttention: (Date.now() - timeTaken) / 1000,
+      });
+      setUser((prev) => ({
+        ...prev,
+        preferencesStage2Attention: productsNames,
+      }));
+      handleFinish();
+    };
+    if (productsRank.length === 2) {
       handleDone();
     }
-  }, [productsRank, handleDone]);
+  }, [
+    productsRank,
+    timeTaken,
+    user,
+    setUser,
+    handleFinish,
+    choiseCount,
+    choise,
+  ]);
 
   if (OPTIONS["OPTION" + newProduct] === undefined) {
     return <div>טוען...</div>;
   }
+
   return (
     <Box padding={10}>
+      <Typography variant="h4" align="center">
+        ג'ון תמיד מעדיף יותר כסף מאשר פחות כסף
+      </Typography>
       <Typography
         variant="h6"
         gutterBottom
         sx={{ textAlign: "center", padding: 10 }}
       >
-        איזה מוצר אתה מעדיף?
+        בחרו את האפשרות שג'ון יעדיף
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box>
           <DesignedButton
-            onClick={() => handleChooseProduct(1)}
+            onClick={() => handleChooseProduct(0)}
             sx={{ marginX: 1 }}
           >
             <img
@@ -130,7 +126,7 @@ export default function TopDownTest({ couples }) {
             />
           </DesignedButton>
           <DesignedButton
-            onClick={() => handleChooseProduct(0)}
+            onClick={() => handleChooseProduct(1)}
             sx={{ marginX: 1 }}
           >
             <img

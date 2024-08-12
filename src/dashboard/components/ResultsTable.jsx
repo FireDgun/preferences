@@ -122,6 +122,7 @@ export default function ResultsTable({ data }) {
           "Answer Attention Question First Try": Boolean(
             user.didAnswerAttentionQuestion
           ).toString(),
+
           choiseCount: user.choiseCount ? user.choiseCount : "",
           Stage: getStageDescription(user.stage), // Assuming this already returns a Hebrew description
           "Test Name": getTestDescription(user.group), // Assuming this already returns a Hebrew description
@@ -143,6 +144,36 @@ export default function ResultsTable({ data }) {
             : "-";
         });
 
+        // Handle preferencesStage2 items for testNumber !== 7 in Hebrew
+        Array.from({ length: 4 }).forEach((_, index) => {
+          userObj[`Attention Question Preferences stage 2' ${index + 1}`] =
+            user.preferencesStage2Attention &&
+            user.preferencesStage2Attention.length > index &&
+            user.testNumber !== 7
+              ? user.preferencesStage2Attention[index]
+              : "-";
+        });
+        Array.from({ length: 2 }).forEach((_, itemIndex) => {
+          const item = user.preferencesStage2Attention?.[itemIndex];
+          userObj[
+            `Attention Question Preferences stage 2 choise ${
+              itemIndex + 1
+            } - preferred`
+          ] = item?.win ? item.win : "-";
+          userObj[
+            `Attention Question Preferences stage 2 choise ${
+              itemIndex + 1
+            } - not preferred`
+          ] = item?.lose ? item.lose : "-";
+          userObj[
+            `Attention Question  Preferences stage 2 choise ${
+              itemIndex + 1
+            } - time`
+          ] = item?.timeTaken ? `${item.timeTaken} seconds` : "-";
+        });
+        userObj["Time stage 2 Attention"] = user.timeTakenAttention
+          ? `${user.timeTakenAttention} seconds`
+          : "-";
         userObj["Time stage 2"] = user.timeTaken
           ? `${user.timeTaken} seconds`
           : "-";
