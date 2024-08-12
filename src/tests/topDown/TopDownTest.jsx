@@ -91,7 +91,7 @@ export default function TopDownTest({ couples }) {
       stage: 3,
       testNumber: 4,
     }));
-    navigate(ROUTES.THANK_YOU);
+    navigate(ROUTES.FEEDBACK);
   }, [navigate, productsRank, setUser, timeTaken, user, choiseCount, choise]);
 
   useEffect(() => {

@@ -59,7 +59,7 @@ export default function RemoveTheBestTest({ couples }) {
         stage: 3,
         testNumber: 0,
       }));
-      navigate(ROUTES.THANK_YOU);
+      navigate(ROUTES.FEEDBACK);
     };
     if (products.length === 0) {
       handleDone();

@@ -97,7 +97,7 @@ export default function BottomUpTest({ couples }) {
         stage: 3,
         testNumber: 3,
       }));
-      navigate(ROUTES.THANK_YOU);
+      navigate(ROUTES.FEEDBACK);
     };
     if (productsRank.length === 10) {
       handleDone();

@@ -78,7 +78,7 @@ export default function IterativeCategorizationManager({ couples }) {
         stage: 3,
         testNumber: 5,
       }));
-      navigate(ROUTES.THANK_YOU);
+      navigate(ROUTES.FEEDBACK);
     };
     const handleChooseCouples = () => {
       if (categotizationLevel >= 10) {

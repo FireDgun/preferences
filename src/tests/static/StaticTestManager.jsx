@@ -66,7 +66,7 @@ export default function StaticTestManager({ couples }) {
       stage: 3,
       testNumber: 6,
     }));
-    navigate(ROUTES.THANK_YOU);
+    navigate(ROUTES.FEEDBACK);
   };
   useEffect(() => {
     if (!timeTaken) {

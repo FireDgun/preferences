@@ -203,7 +203,7 @@ export default function PairwiseStaticTest({ couples }) {
         stage: 3,
         testNumber: 7,
       }));
-      navigate(ROUTES.THANK_YOU);
+      navigate(ROUTES.FEEDBACK);
     };
 
     if (coupleIndex >= allPossibleCouples?.length) {

@@ -11,6 +11,7 @@ import FinishStageOne from "../tests/simplePreferences/FinishStageOne";
 import { useUser } from "../providers/UserProvider";
 import DashboardPage from "../dashboard/pages/DashboardPage";
 import StageOneClosed from "../tests/StageOneClosed";
+import FeedbackPage from "../pages/FeedbackPage";
 
 export default function Router() {
   const { user } = useUser();
@@ -33,6 +34,7 @@ export default function Router() {
       <Route path={ROUTES.TEST_STAGE_ONE_FINISH} element={<FinishStageOne />} />
       <Route path={ROUTES.TEST_STAGE_ONE_CLOSED} element={<StageOneClosed />} />
 
+      <Route path={ROUTES.FEEDBACK} element={<FeedbackPage />} />
       <Route path={ROUTES.ADMIN} element={<DashboardPage />} />
 
       <Route path="*" element={<ErrorPage />} />
