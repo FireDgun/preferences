@@ -150,11 +150,12 @@ export default function ResultsTable({ data }) {
           userObj[`Attention Question Preferences stage 2' ${index + 1}`] =
             user.preferencesStage2Attention &&
             user.preferencesStage2Attention.length > index &&
-            user.testNumber !== 7
+            user.testNumber !== 7 &&
+            user.testNumber
               ? user.preferencesStage2Attention[index]
               : "-";
         });
-        Array.from({ length: 2 }).forEach((_, itemIndex) => {
+        Array.from({ length: 1 }).forEach((_, itemIndex) => {
           const item = user.preferencesStage2Attention?.[itemIndex];
           userObj[
             `Attention Question Preferences stage 2 choise ${
